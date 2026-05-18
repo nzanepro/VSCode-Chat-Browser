@@ -1,0 +1,13 @@
+{
+  "sessionId": "cccc-0003",
+  "customTitle": "Beta Chat One",
+  "lastMessageDate": 1700000020000,
+  "requests": [
+    {
+      "id": "req-4",
+      "timestamp": 1700000020000,
+      "message": {"text": "Question in json format"},
+      "response": [{"value": "Answer in json format"}]
+    }
+  ]
+}

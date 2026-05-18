@@ -1,0 +1,4 @@
+{"kind": 0, "v": {"requests": [], "customTitle": ""}}
+{"kind": 1, "k": ["customTitle"], "v": "Alpha Chat One"}
+{"kind": 2, "k": ["requests"], "v": [{"id": "req-1", "timestamp": 1700000001000, "message": {"text": "Hello from alpha"}, "response": [{"value": "Hi there from the assistant!"}]}]}
+{"kind": 2, "k": ["requests"], "v": [{"id": "req-2", "timestamp": 1700000002000, "message": {"text": "What can you help with?"}, "response": [{"value": "I can help with many things."}, {"kind": "thinking", "value": "User wants to know my capabilities."}]}]}

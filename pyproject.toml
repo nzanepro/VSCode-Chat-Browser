@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vscode-chat-browser"
+version = "0.1.0"
+description = "Browse, archive, delete, copy, and repair VS Code workspace chat history"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+vscode-chat-browser = "vscode_chat_browser.cli:main"
+
+# ── package layout (standard src layout) ──────────────────────────────────────
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ── pytest ────────────────────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests"]
