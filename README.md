@@ -27,17 +27,24 @@ Contact me for consulting, sponsorship, or FTE opportunities.
 ## How to use
 
 1. Find your workspace chat folder. It will be automatically detected, but it is user configurable.
+
     Windows default: `~/AppData/Roaming/Code/User/workspaceStorage/`
+
     macOS default: `~/Library/Application Support/Code/User/workspaceStorage`
+
     Linux default: `~/.config/Code/User/workspaceStorage`
+
 2. Make a snapshot backup (aka zip/tar/etc) of this folder and put it somewhere safe. There is a button in the UI to do this if that is easier.
 3. Since this is a self-contained Python 3/tkinter UI, you only need to have Python 3 installed on your computer. No other dependencies exist.
 4. Download the latest release of this project.
 5. **Close all windows of VSCode before using.**
 6. Run the included launcher:
+
     `workspace_chat_browser_Win.bat` (Windows) or
+
     `workspace_chat_browser_macOS.terminal` (macOS) or
-    `python3 src/workspace_chat_browser.py` in your terminal of choice.
+
+    `python3 src/vscode_chat_browser/workspace_chat_browser.py` in your terminal of choice.
 
 ## Advanced usage
 
