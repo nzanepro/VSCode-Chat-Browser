@@ -84,6 +84,14 @@ using the example of the pip installed package, this is how you can point it to 
 
 ```vscode-chat-browser ui --storage-root tests/fixtures/demo_storage```
 
+## Documentation
+
+More detailed documentation is available in the [docs/](docs/) folder:
+
+- [docs/index.md](docs/index.md) — Full overview, UI tour, storage layout, and session file format
+- [docs/cli-reference.md](docs/cli-reference.md) — All CLI commands with arguments and examples
+- [docs/architecture.md](docs/architecture.md) — Code layout, public API reference, and contributing guide
+
 ## Contributing
 
 - Collaboration is welcome and encouraged!
