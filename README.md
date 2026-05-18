@@ -1,6 +1,8 @@
 # VSCode Chat Browser
 Python based browser for VSCode Chats. Backup, Copy, and Repair
 
+![VSCode Chat Browser UI](docs/workspace_chat_browser_example_ui.png)
+
 ## About this project
 
 I had not been using VSCode workspaces with multiple folders and recently discovered this wonderful feature. 
@@ -37,8 +39,45 @@ Contact me for consulting, sponsorship, or FTE opportunities.
     `workspace_chat_browser_macOS.terminal` (macOS) or
     `python3 src/workspace_chat_browser.py` in your terminal of choice.
 
+## Advanced usage
 
-## Developing
+### if accessed via a terminal, the cli becomes available
+
+- use this if working from the cloned directory:
+    
+    ```./src/vscode_chat_browser/cli.py -h```
+
+- use this command if you have installed via pip:
+
+    ```vscode-chat-browser -h```
+
+```
+usage: chat_browser [-h] <command> ...
+
+VS Code Chat Browser — CLI
+
+positional arguments:
+  <command>
+    list      List workspaces and sessions
+    show      Print conversation turns
+    archive   Zip session(s) to an archive
+    delete    Delete session(s)
+    copy      Copy session(s) between workspaces
+    repair    Repair DB index mismatches in a workspace
+    restore   Restore sessions from an archive
+    ui        Open the graphical chat browser
+
+options:
+  -h, --help  show this help message and exit
+```
+
+### browsing a custom directory
+
+using the example of the pip installed package, this is how you can point it to a different directory:
+
+```vscode-chat-browser ui --storage-root tests/fixtures/demo_storage```
+
+## Contributing
 
 - Collaboration is welcome and encouraged!
 - pytest is the only current dependency for making sure the code has good test coverage and regressions can be found.

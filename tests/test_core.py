@@ -464,6 +464,116 @@ class TestMakeDbEntry:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# _db_ensure / _db_read_index / _db_write_index / _db_backup
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+class TestDbHelpers:
+
+    def test_db_ensure_creates_db_and_table(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        assert not db.exists()
+        core._db_ensure(db)
+        assert db.exists()
+        conn = sqlite3.connect(str(db))
+        rows = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='ItemTable'"
+        ).fetchall()
+        conn.close()
+        assert rows
+
+    def test_db_ensure_is_idempotent(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        core._db_ensure(db)  # must not raise
+        assert db.exists()
+
+    def test_db_read_index_returns_empty_if_key_absent(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        idx = core._db_read_index(db)
+        assert idx == {"version": 1, "entries": {}}
+
+    def test_db_write_then_read_roundtrip(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        idx = {
+            "version": 1,
+            "entries": {
+                "sess-abc": {
+                    "sessionId": "sess-abc",
+                    "title": "Round-trip session",
+                    "isEmpty": False,
+                }
+            },
+        }
+        core._db_write_index(db, idx)
+        result = core._db_read_index(db)
+        assert result["entries"]["sess-abc"]["title"] == "Round-trip session"
+        assert result["entries"]["sess-abc"]["isEmpty"] is False
+
+    def test_db_write_overwrites_existing_entries(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        core._db_write_index(db, {
+            "version": 1,
+            "entries": {
+                "a": {
+                    "title": "First"
+                }
+            }
+        })
+        core._db_write_index(db, {
+            "version": 1,
+            "entries": {
+                "b": {
+                    "title": "Second"
+                }
+            }
+        })
+        result = core._db_read_index(db)
+        assert "a" not in result["entries"]
+        assert result["entries"]["b"]["title"] == "Second"
+
+    def test_db_backup_creates_file(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        backup = core._db_backup(db)
+        assert backup.exists()
+        assert backup.name.startswith("state.vscdb.")
+
+    def test_db_backup_default_suffix(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        backup = core._db_backup(db)
+        assert "backup" in backup.name
+
+    def test_db_backup_custom_suffix(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        backup = core._db_backup(db, suffix="pre-delete")
+        assert "pre-delete" in backup.name
+
+    def test_db_backup_is_valid_sqlite(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        idx = {"version": 1, "entries": {"x": {"title": "Backed up"}}}
+        core._db_write_index(db, idx)
+        backup = core._db_backup(db)
+        result = core._db_read_index(backup)
+        assert result["entries"]["x"]["title"] == "Backed up"
+
+    def test_db_backup_does_not_alter_original(self, tmp_path):
+        db = tmp_path / "state.vscdb"
+        core._db_ensure(db)
+        idx = {"version": 1, "entries": {"orig": {"title": "Original"}}}
+        core._db_write_index(db, idx)
+        core._db_backup(db)
+        result = core._db_read_index(db)
+        assert result["entries"]["orig"]["title"] == "Original"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # action_archive_session / action_archive_workspace
 # ══════════════════════════════════════════════════════════════════════════════
 

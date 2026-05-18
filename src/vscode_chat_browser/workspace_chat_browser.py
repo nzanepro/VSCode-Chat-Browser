@@ -126,7 +126,7 @@ class _Tooltip:
 
 class ChatBrowser(tk.Tk):
 
-    def __init__(self):
+    def __init__(self, initial_storage: str | None = None):
         super().__init__()
         self.title("VS Code Chat Browser")
         self.update_idletasks()
@@ -148,6 +148,8 @@ class ChatBrowser(tk.Tk):
         self._sort_rev = True  # True = descending
         self._view_mode = tk.StringVar(value="grouped")
         self._build_ui()
+        if initial_storage is not None:
+            self._path_var.set(initial_storage)
         self.after(50, self._load_all)
 
     # ── layout ────────────────────────────────────────────────────────────────

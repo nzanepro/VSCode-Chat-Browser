@@ -199,6 +199,18 @@ def cmd_repair(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_ui(args: argparse.Namespace) -> int:
+    storage_root = args.storage_root
+    try:
+        from .workspace_chat_browser import ChatBrowser
+    except ImportError:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from workspace_chat_browser import ChatBrowser  # type: ignore[no-redef]
+    app = ChatBrowser(initial_storage=storage_root)
+    app.mainloop()
+    return 0
+
+
 def cmd_restore(args: argparse.Namespace) -> int:
     zip_path = Path(args.zip_path)
     ws_dir = Path(args.ws_dir)
@@ -304,6 +316,16 @@ def build_parser() -> argparse.ArgumentParser:
                        action="store_true",
                        help="Skip DB backup before restoring")
     p_res.set_defaults(func=cmd_restore)
+
+    # ui
+    p_ui = sub.add_parser("ui", help="Open the graphical chat browser")
+    p_ui.add_argument(
+        "--storage-root",
+        metavar="<path>",
+        default=None,
+        help="Override the workspaceStorage root (default: VS Code default)",
+    )
+    p_ui.set_defaults(func=cmd_ui)
 
     return parser
 

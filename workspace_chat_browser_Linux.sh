@@ -1,5 +1,9 @@
+#!/bin/sh
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 if ! command -v python3 &>/dev/null; then
     echo "Error: python3 is not available. Please install Python 3 and ensure it is on your PATH."
     exit 1
 fi
-python3 ./src/vscode_chat_browser/workspace_chat_browser.py
+python3 "$SCRIPT_DIR/src/vscode_chat_browser/workspace_chat_browser.py"

@@ -1,5 +1,16 @@
-if ! command -v python3 &>/dev/null; then
-    echo "Error: python3 is not available. Please install Python 3 and ensure it is on your PATH."
-    exit 1
-fi
-python3 ./src/vscode_chat_browser/workspace_chat_browser.py
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CommandString</key>
+	<string>D=$(dirname "$(mdfind -name 'workspace_chat_browser_macOS.terminal' 2&gt;/dev/null | head -1)" 2&gt;/dev/null); if [ -n "$D" -a "$D" != "." ]; then cd "$D"; bash workspace_chat_browser_Linux.sh; else echo "Error: Could not find the project directory via Spotlight. Run workspace_chat_browser_Linux.sh directly from the project directory."; fi</string>
+	<key>ProfileCurrentVersion</key>
+	<real>2.07</real>
+	<key>RunCommandAsShell</key>
+	<false/>
+	<key>name</key>
+	<string>VSCode Chat Browser</string>
+	<key>type</key>
+	<string>Window Settings</string>
+</dict>
+</plist>

@@ -11,6 +11,7 @@ argument-parsing → action → output chain.
 import json
 import zipfile
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -286,3 +287,48 @@ class TestCmdRestore:
              str(ws), "--no-backup"], capsys)
         assert code != 0
         assert "ERROR" in err
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ui
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+class TestCmdUi:
+    """
+    The UI command launches a Tkinter window, which we can't actually render in
+    CI.  Tests verify argument parsing and that ChatBrowser is instantiated
+    (and mainloop called) with the correct arguments.
+    """
+
+    def _make_mock_browser(self):
+        mock_app = MagicMock()
+        mock_app.mainloop = MagicMock(return_value=None)
+        return mock_app
+
+    def test_ui_calls_mainloop(self):
+        mock_app = self._make_mock_browser()
+        with patch("vscode_chat_browser.workspace_chat_browser.ChatBrowser",
+                   return_value=mock_app) as MockCls:
+            code = cli.main(["ui"])
+        assert code == 0
+        MockCls.assert_called_once()
+        mock_app.mainloop.assert_called_once()
+
+    def test_ui_passes_storage_root(self, tmp_path):
+        mock_app = self._make_mock_browser()
+        custom_root = str(tmp_path / "my_storage")
+        with patch("vscode_chat_browser.workspace_chat_browser.ChatBrowser",
+                   return_value=mock_app) as MockCls:
+            code = cli.main(["ui", "--storage-root", custom_root])
+        assert code == 0
+        # ChatBrowser must be called with initial_storage=custom_root
+        MockCls.assert_called_once_with(initial_storage=custom_root)
+
+    def test_ui_default_storage_root_is_none(self):
+        """Omitting --storage-root passes None so ChatBrowser uses its default."""
+        mock_app = self._make_mock_browser()
+        with patch("vscode_chat_browser.workspace_chat_browser.ChatBrowser",
+                   return_value=mock_app) as MockCls:
+            cli.main(["ui"])
+        MockCls.assert_called_once_with(initial_storage=None)

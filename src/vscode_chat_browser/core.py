@@ -23,6 +23,7 @@ Actions (mutate filesystem / DB):
 import json
 import os
 import re
+import sys
 import shutil
 import sqlite3
 import zipfile
@@ -30,8 +31,15 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import unquote
 
-WORKSPACESTORAGE = Path(os.environ.get(
-    "APPDATA", "")) / "Code" / "User" / "workspaceStorage"
+if sys.platform == "darwin":
+    WORKSPACESTORAGE = Path.home(
+    ) / "Library" / "Application Support" / "Code" / "User" / "workspaceStorage"
+elif sys.platform == "win32":
+    WORKSPACESTORAGE = Path(os.environ.get(
+        "APPDATA", "")) / "Code" / "User" / "workspaceStorage"
+else:
+    WORKSPACESTORAGE = Path.home(
+    ) / ".config" / "Code" / "User" / "workspaceStorage"
 
 # ── JSONL replay ──────────────────────────────────────────────────────────────
 
